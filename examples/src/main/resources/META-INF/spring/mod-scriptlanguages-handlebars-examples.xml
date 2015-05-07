@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:osgi="http://www.springframework.org/schema/osgi"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/osgi
+       http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+
+    <bean id="helloHelper" class="org.jahia.services.render.scripting.handlebars.examples.helpers.HelloHelper" />
+
+    <osgi:service id="helloHelperOsgiService" ref="helloHelper" interface="com.github.jknack.handlebars.Helper">
+        <osgi:service-properties>
+            <entry key="name" value="hello"/>
+        </osgi:service-properties>
+    </osgi:service>
+
+</beans>

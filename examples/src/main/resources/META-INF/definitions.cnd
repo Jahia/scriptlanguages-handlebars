@@ -1,0 +1,2 @@
+[jnt:handlebarsNode] > jnt:content, mix:title, jmix:basicContent
+- handlebarsText (string) i18n
