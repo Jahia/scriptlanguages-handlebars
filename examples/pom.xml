@@ -62,6 +62,7 @@
                 <configuration>
                     <instructions>
                         <Jahia-Depends>default,scriptlanguages-handlebars</Jahia-Depends>
+                        <Jahia-Module-Scripting-Views>handlebars</Jahia-Module-Scripting-Views>
                         <Embed-Dependency>*; scope=compile|runtime; type=!pom; inline=false</Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Dynamic-ImportPackage>*</Dynamic-ImportPackage>
