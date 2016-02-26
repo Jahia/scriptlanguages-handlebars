@@ -119,7 +119,11 @@ public class HandlebarsScriptEngineFactoryConfigurator implements BundleScriptEn
     @Override
     public void destroy(HandlebarsScriptEngineFactory handlebarsScriptEngineFactory) {
         helperServiceTracker.close();
+    }
 
+    @Override
+    public void configurePreScriptEngineCreation(HandlebarsScriptEngineFactory scriptEngineFactory) {
+        // nothing to do here
     }
 
     private String getHelperName(ServiceReference serviceReference, Helper<?> service) {
