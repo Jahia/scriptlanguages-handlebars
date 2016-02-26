@@ -118,6 +118,7 @@ public class HandlebarsScriptEngineFactoryConfigurator implements BundleScriptEn
 
     @Override
     public void destroy(HandlebarsScriptEngineFactory handlebarsScriptEngineFactory) {
+        helperServiceTracker.close();
 
     }
 
