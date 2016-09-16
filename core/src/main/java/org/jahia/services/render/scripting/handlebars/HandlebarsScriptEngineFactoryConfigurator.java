@@ -100,7 +100,7 @@ public class HandlebarsScriptEngineFactoryConfigurator implements BundleScriptEn
 
             @Override
             public void modifiedService(ServiceReference reference, Helper service) {
-
+                System.out.println("MODIFIED SERVICE CALLED");
             }
 
             @Override
@@ -108,7 +108,6 @@ public class HandlebarsScriptEngineFactoryConfigurator implements BundleScriptEn
                 if (service != null) {
                     scriptEngineFactory.getHelpers().remove(getHelperName(reference, service));
                 }
-                scriptEngineFactory.initializeTemplateEngine();
             }
         };
 

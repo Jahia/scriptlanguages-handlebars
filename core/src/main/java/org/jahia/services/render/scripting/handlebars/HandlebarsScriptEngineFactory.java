@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, InitializingBean {
 
-    Handlebars handlebars;
+    final Handlebars handlebars = new Handlebars();
     private List<String> extensions = new ArrayList<String>();
     private List<String> names = new ArrayList<String>();
     private List<String> mimeTypes = new ArrayList<String>();
@@ -57,10 +57,6 @@ public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, Initi
 
     public void setLanguageVersion(String languageVersion) {
         this.languageVersion = languageVersion;
-    }
-
-    public void setHandlebars(Handlebars handlebars) {
-        this.handlebars = handlebars;
     }
 
     public Handlebars getHandlebars() {
@@ -141,9 +137,6 @@ public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, Initi
     }
 
     public void initializeTemplateEngine() {
-
-        handlebars = new Handlebars();
-
         I18nHelper.i18n.setSource(i18nSource);
         I18nHelper.i18nJs.setSource(i18nSource);
 
