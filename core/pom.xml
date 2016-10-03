@@ -95,6 +95,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Jahia-Module-Type>system</Jahia-Module-Type>
                         <Export-Package>com.github.jknack.handlebars.*</Export-Package>
                     </instructions>
                 </configuration>
