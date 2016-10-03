@@ -46,6 +46,10 @@
     <packaging>pom</packaging>
     <description>This is the root project for the Handlebars scripting language support in Jahia</description>
 
+    <properties>
+        <handlebars.version>4.0.4</handlebars.version>
+    </properties>
+
     <scm>
         <connection>scm:git:git@github.com:Jahia/scriptlanguages-handlebars.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/scriptlanguages-handlebars.git</developerConnection>

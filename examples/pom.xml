@@ -47,10 +47,9 @@
 
     <dependencies>
         <dependency>
-    <groupId>com.github.jknack</groupId>
-    <artifactId>handlebars</artifactId>
-    <version>2.1.0</version>
-  </dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>${handlebars.version}</version>
     </dependencies>
 
     <build>

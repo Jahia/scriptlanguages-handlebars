@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
-            <version>4.0.4</version>
+            <version>${handlebars.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
