@@ -43,7 +43,8 @@
     <artifactId>scriptlanguages-handlebars-examples</artifactId>
     <name>Handlebars Script Language integration examples module</name>
     <packaging>bundle</packaging>
-    <description>This module provides examples of usage of the Handlebars language as a scripting language for Jahia
+    <description>
+        This module provides examples of usage of the Handlebars language as a scripting language for Jahia DX
     </description>
 
     <dependencies>

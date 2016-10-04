@@ -1,8 +1,8 @@
 # scriptlanguages-handlebars
 
-A module that provides Handlebars scripting language support. This module should mostly be considered
-as a proof-of-concept because it contains some hacks to get this working properly. It is not recommended to use this
-code in production environment
+A Jahia Digital Experience Manager (DX) module that provides Handlebars scripting language support. This module 
+should mostly be considered as a proof-of-concept. It is not recommended to use this code in a production environment.
+For more information about Jahia DX, please go to: https://www.jahia.com/platform/digital-experience-manager
 
 ## Features
 - Makes it possible to use Handlebars as a scripting languages for Jahia views
