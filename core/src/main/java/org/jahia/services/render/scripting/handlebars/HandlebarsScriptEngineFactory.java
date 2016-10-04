@@ -1,114 +1,71 @@
 package org.jahia.services.render.scripting.handlebars;
 
+import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.helper.I18nHelper;
-import org.springframework.beans.factory.InitializingBean;
-import com.github.jknack.handlebars.Handlebars;
+import org.jahia.services.render.scripting.bundle.Configurable;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by loom on 04.05.15.
  */
-public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, InitializingBean {
+public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, Configurable {
 
-    final Handlebars handlebars = new Handlebars();
-    private List<String> extensions = new ArrayList<String>();
-    private List<String> names = new ArrayList<String>();
-    private List<String> mimeTypes = new ArrayList<String>();
-    private String engineName = "Handlebars";
-    private String engineVersion = "1.0";
-    private String languageName = "handlebars";
-    private String languageVersion = "2.1.0";
-    private HandlebarsI18nSource i18nSource = new HandlebarsI18nSource();
-
-    private Map<String,Helper<?>> helpers = new HashMap<String,Helper<?>>();
+    private Handlebars handlebars = new Handlebars();
+    private Map<String, Helper<?>> helpers = new HashMap<>();
+    private ServiceTracker<Helper, Helper> helperServiceTracker;
 
     public HandlebarsScriptEngineFactory() {
-        extensions.add("hbs");
-        names.add("handlebars");
+        HandlebarsI18nSource i18nSource = new HandlebarsI18nSource();
+        I18nHelper.i18n.setSource(i18nSource);
+        I18nHelper.i18nJs.setSource(i18nSource);
     }
 
-    public void setExtensions(List<String> extensions) {
-        this.extensions = extensions;
-    }
-
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-
-    public void setMimeTypes(List<String> mimeTypes) {
-        this.mimeTypes = mimeTypes;
-    }
-
-    public void setEngineName(String engineName) {
-        this.engineName = engineName;
-    }
-
-    public void setEngineVersion(String engineVersion) {
-        this.engineVersion = engineVersion;
-    }
-
-    public void setLanguageName(String languageName) {
-        this.languageName = languageName;
-    }
-
-    public void setLanguageVersion(String languageVersion) {
-        this.languageVersion = languageVersion;
-    }
-
-    public Handlebars getHandlebars() {
-        return handlebars;
-    }
-
-    public Map<String, Helper<?>> getHelpers() {
-        return helpers;
-    }
-
-    public void setHelpers(Map<String, Helper<?>> helpers) {
-        this.helpers = helpers;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        initializeTemplateEngine();
-    }
 
     @Override
     public String getEngineName() {
-        return engineName;
+        return "Handlebars";
     }
 
     @Override
     public String getEngineVersion() {
-        return engineVersion;
+        return "1.0";
     }
 
     @Override
     public List<String> getExtensions() {
-        return extensions;
+        return Collections.singletonList("hbs");
     }
 
     @Override
     public List<String> getMimeTypes() {
-        return mimeTypes;
+        return Collections.singletonList("text/x-handlebars-template");
     }
 
     @Override
     public List<String> getNames() {
-        return names;
+        return Collections.singletonList("handlebars");
     }
 
     @Override
     public String getLanguageName() {
-        return languageName;
+        return "handlebars";
     }
 
     @Override
     public String getLanguageVersion() {
-        return languageVersion;
+        return "4.0.4";
     }
 
     @Override
@@ -136,14 +93,64 @@ public class HandlebarsScriptEngineFactory implements ScriptEngineFactory, Initi
         return new HandlebarsScriptEngine(this, handlebars);
     }
 
-    public void initializeTemplateEngine() {
-        I18nHelper.i18n.setSource(i18nSource);
-        I18nHelper.i18nJs.setSource(i18nSource);
+    @Override
+    public void configurePreRegistration(final Bundle bundle) {
+        final BundleContext bundleContext = bundle.getBundleContext();
 
-        for (Map.Entry<String,Helper<?>> helperEntry : helpers.entrySet()) {
-            handlebars.registerHelper(helperEntry.getKey(), helperEntry.getValue());
-        }
+        ServiceTrackerCustomizer<Helper, Helper> serviceTrackerCustomizer = new ServiceTrackerCustomizer<Helper, Helper>() {
+            @Override
+            public Helper addingService(ServiceReference reference) {
+                Helper<?> addedHelper = (Helper<?>) bundleContext.getService(reference);
+                registerHelper(getHelperName(reference, addedHelper), addedHelper);
+                return addedHelper;
+            }
 
+            @Override
+            public void modifiedService(ServiceReference reference, Helper service) {
+            }
+
+            @Override
+            public void removedService(ServiceReference reference, Helper service) {
+                if (service != null) {
+                    removeHelper(getHelperName(reference, service));
+                }
+            }
+        };
+
+        helperServiceTracker = new ServiceTracker<>(bundleContext, Helper.class, serviceTrackerCustomizer);
+        helperServiceTracker.open();
     }
 
+    @Override
+    public void destroy(Bundle bundle) {
+        helperServiceTracker.close();
+    }
+
+    private void removeHelper(String helperName) {
+        helpers.remove(helperName);
+        resetHandlebars(); // we need to reset as Handlebars doesn't provide any means to deregister helpers
+    }
+
+    private void resetHandlebars() {
+        handlebars = new Handlebars();
+        for (Map.Entry<String, Helper<?>> entry : helpers.entrySet()) {
+            handlebars.registerHelper(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void registerHelper(String helperName, Helper<?> addedHelper) {
+        helpers.put(helperName, addedHelper);
+        handlebars.registerHelper(helperName, addedHelper);
+    }
+
+
+    @Override
+    public void configurePreScriptEngineCreation() {
+        // nothing to do here
+    }
+
+    private String getHelperName(ServiceReference serviceReference, Helper<?> service) {
+        final String name = (String) serviceReference.getProperty("name");
+        return name != null ? name : service.getClass().getSimpleName();
+    }
 }
