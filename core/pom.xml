@@ -47,6 +47,10 @@
         This module provides an integration of the Handlebars language as a scripting language for Jahia DX
     </description>
 
+    <properties>
+        <jahia-module-signature>MCwCFHEKiyz6lf+ZGAi9peYj6mL9OtC+AhR8wnPNgvw593STGoZrKFxSY/CtMQ==</jahia-module-signature>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.github.jknack</groupId>
